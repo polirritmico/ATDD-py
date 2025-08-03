@@ -19,22 +19,18 @@ class DslContext:
         self.aliases[name] = alias
         return alias
 
+    def seq_for_name(
+        self, name: str, start: int, sequence_numbers: dict[str, int]
+    ) -> str:
+        current = sequence_numbers.get(name, start)
+        sequence_numbers[name] = current + 1
+        return str(current)
+
     def decode_alias(self, name: str) -> str:
         for registered_name, alias in self.aliases.items():
             if name == alias:
                 return registered_name
-
         return ""
 
     def sequence_number_for_name(self, name: str, start: int) -> str:
         return self.seq_for_name(name, start, self.sequence_numbers)
-
-    def seq_for_name(
-        self, name: str, start: int, sequence_numbers: dict[str, int]
-    ) -> str:
-        current: int = start
-        if name in sequence_numbers:
-            current = sequence_numbers.get(name)
-        sequence_numbers[name] = current + 1
-
-        return str(current)
